@@ -88,7 +88,6 @@ def add_groups(groups):
 def add_user(user, password, add_groups):
     if not is_user_exists(user):
         if add_groups:
-            add_groups(add_groups)
             execute_command_as_root(f'useradd -m -G {",".join(add_groups)} {user}')
         else:
             execute_command_as_root(f'useradd -m {user}')
