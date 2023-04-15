@@ -65,7 +65,7 @@ def run2():
     nginx.install()
     nginx.add_websocket_support()
     nginx.disable_default_site()
-    nginx.create_dirs_and_files(normal_user)
+    nginx.create_dirs_and_files(normal_user, domain)
     nginx.start_in_boot()
 
     xray.install(normal_user)
