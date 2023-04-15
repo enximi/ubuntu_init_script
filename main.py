@@ -1,13 +1,13 @@
 import acme
 import firewall
 import network
-import nginx
 import racknerd
 import software
 import ssh
 import time_and_region
 import utils
 import zsh
+from nginx import nginx
 from xray import xray
 
 normal_user = 'uaername'
@@ -65,7 +65,7 @@ def run2():
     nginx.install()
     nginx.add_websocket_support()
     nginx.disable_default_site()
-    nginx.create_site_dir(normal_user)
+    nginx.create_dirs_and_files(normal_user)
     nginx.start_in_boot()
 
     xray.install(normal_user)

@@ -1,5 +1,5 @@
-import nginx
 import utils
+from nginx import nginx
 
 
 def install(user):
@@ -25,3 +25,8 @@ def install_cert(user: str, domain: str):
           f' --fullchain-file {cert_floder}/fullchain.cer' \
           f' --reloadcmd "sudo service nginx force-reload"'
     utils.execute_command_as_user(user, cmd)
+
+
+def get_cert_paths(user: str, domain: str):
+    cert_floder = f'{utils.get_user_home(user)}/cert/{domain}'
+    return {'fullchain': f'{cert_floder}/fullchain.cer', 'key': f'{cert_floder}/key.key'}
