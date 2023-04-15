@@ -10,25 +10,25 @@ import utils
 import zsh
 from xray import xray
 
-add_user = 'xxx'
-add_user_password = 'xxxpassword'
-add_user_groups = ['sudo']
+normal_user = 'uaername'
+normal_user_password = 'password'
+normal_user_groups = ['group1', 'group2']
 
-ssh_key = 'xxx'
+ssh_key = 'ssh-ed25519 ssh_key user@host'
 ssh_port = 22
 
 domain = 'example.com'
-cf_token = 'xxx'
-cf_account_id = 'xxx'
+cf_token = 'cf token'
+cf_account_id = 'cd account id'
 
 
 def run1():
     racknerd.add_missing_groups()
     racknerd.enable_ipv6()
 
-    utils.add_user(add_user, add_user_password, add_user_groups)
+    utils.add_user(normal_user, normal_user_password, normal_user_groups)
 
-    ssh.add_ssh_key(add_user, ssh_key)
+    ssh.add_ssh_key(normal_user, ssh_key)
     ssh.add_ssh_key('root', ssh_key)
     ssh.change_port(ssh_port)
     ssh.disable_password_authentication()
@@ -50,32 +50,32 @@ def run1():
 def run2():
     software.apt_auto_remove_packages(['vim'])
     software.apt_install_packages(['ranger', 'curl', 'git', 'neovim', 'python3-pip'])
-    software.install_pip_packages(['virtualenv', 'autopep8'], add_user)
+    software.install_pip_packages(['virtualenv', 'autopep8'], normal_user)
 
     zsh.install()
-    zsh.set_zsh_as_default_shell(add_user)
+    zsh.set_zsh_as_default_shell(normal_user)
     zsh.set_zsh_as_default_shell('root')
-    zsh.install_zimfw(add_user)
+    zsh.install_zimfw(normal_user)
     zsh.install_zimfw('root')
-    zsh.set_zimfw(add_user)
-    zsh.set_zimfw('root')
-    zsh.set_editor(add_user, 'nvim')
+    zsh.set_up_zimfw(normal_user)
+    zsh.set_up_zimfw('root')
+    zsh.set_editor(normal_user, 'nvim')
     zsh.set_editor('root', 'nvim')
 
     nginx.install()
     nginx.add_websocket_support()
-    nginx.del_default_site()
-    nginx.create_site_dir(add_user)
+    nginx.disable_default_site()
+    nginx.create_site_dir(normal_user)
     nginx.start_in_boot()
 
-    xray.install(add_user)
-    xray.creat_xray_files(add_user)
-    xray.write_config(add_user)
+    xray.install(normal_user)
+    xray.creat_xray_files(normal_user)
+    xray.write_config(normal_user)
     xray.restart()
 
-    acme.install(add_user)
-    acme.apply_cert(add_user, domain, cf_token, cf_account_id)
-    acme.install_cert(add_user, domain)
+    acme.install(normal_user)
+    acme.apply_cert_with_cfdns(normal_user, domain, cf_token, cf_account_id)
+    acme.install_cert(normal_user, domain)
 
 
 if __name__ == '__main__':

@@ -3,6 +3,7 @@
 
 import os
 import pwd
+import shlex
 import subprocess
 
 
@@ -21,8 +22,33 @@ def get_user_home(username):
 root_homedir = get_user_home('root')
 
 
+def __check_software_installed(software):
+    cmd = f"dpkg-query -W -f='${{Status}}' {software}"
+    process = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+    output = output.decode('utf-8')
+    if "install ok installed" in output.lower():
+        return True
+    else:
+        return False
+
+
+def __check_zsh_installed():
+    return __check_software_installed('zsh')
+
+
+def __check_bash_installed():
+    return __check_software_installed('bash')
+
+
 def execute_command_as_user(username, command):
-    subprocess.run(['sudo', '-u', username, 'bash', '-c', f'cd && {command}'])
+    if __check_zsh_installed():
+        sh = 'zsh'
+    elif __check_bash_installed():
+        sh = 'bash'
+    else:
+        sh = 'sh'
+    subprocess.run(['sudo', '-u', username, sh, '-c', f'cd && {command}'])
 
 
 def execute_command_as_root(command):
@@ -61,7 +87,11 @@ def add_groups(groups):
 
 def add_user(user, password, add_groups):
     if not is_user_exists(user):
-        execute_command_as_root(f'useradd -m -G {",".join(add_groups)} {user}')
+        if add_groups:
+            add_groups(add_groups)
+            execute_command_as_root(f'useradd -m -G {",".join(add_groups)} {user}')
+        else:
+            execute_command_as_root(f'useradd -m {user}')
         execute_command_as_root(f'echo {user}:{password} | chpasswd')
 
 

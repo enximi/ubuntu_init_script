@@ -1,3 +1,5 @@
+import os
+
 import software
 import utils
 
@@ -42,10 +44,16 @@ def add_websocket_support():
         print('WebSocket支持已经存在，无需重复添加。')
 
 
-def del_default_site():
+def disable_default_site():
     if os.path.exists('/etc/nginx/sites-enabled/default'):
         utils.execute_command_as_root('unlink /etc/nginx/sites-enabled/default')
 
 
 def create_site_dir(user):
     utils.mkdir(f'{utils.get_user_home(user)}/nginx/site', user)
+
+
+def make_reload_no_password(user):
+    path = '/etc/sudoers.d/nginx'
+    utils.mkfile(path, 'root')
+    utils.add_lines_to_file(path, [f'{user} ALL=(ALL) NOPASSWD: /usr/sbin/service nginx force-reload'])

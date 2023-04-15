@@ -18,7 +18,7 @@ def install_zimfw(user):
                                   'curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh')
 
 
-def set_zimfw(user):
+def set_up_zimfw(user):
     utils.add_lines_to_file(f'{utils.get_user_home(user)}/.zimrc',
                             ['zmodule exa',
                              "zmodule ohmyzsh/ohmyzsh -f 'plugins/extract' -s 'plugins/extract/extract.plugin.zsh'",
