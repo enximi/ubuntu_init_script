@@ -51,6 +51,7 @@ def run2():
     software.apt_auto_remove_packages(['vim'])
     software.apt_install_packages(['ranger', 'curl', 'git', 'neovim', 'python3-pip'])
     software.install_pip_packages(['virtualenv', 'autopep8'], normal_user)
+    utils.add_path_to_env(normal_user, f'{utils.get_user_home(normal_user)}/.local/bin')
 
     zsh.install()
     zsh.set_zsh_as_default_shell(normal_user)

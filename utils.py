@@ -139,3 +139,11 @@ def comment_lines_in_file(file_path, lines):
                 f.write('#' + line)
             else:
                 f.write(line)
+
+
+def add_path_to_env(path, user):
+    if path not in os.environ['PATH']:
+        if os.path.exists(f'{get_user_home(user)}/.zshrc'):
+            add_lines_to_file(f'{get_user_home(user)}/.zshrc', [f'export PATH=$PATH:{path}'])
+        elif os.path.exists(f'{get_user_home(user)}/.bashrc'):
+            add_lines_to_file(f'{get_user_home(user)}/.bashrc', [f'export PATH=$PATH:{path}'])
